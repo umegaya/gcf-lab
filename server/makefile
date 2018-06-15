@@ -6,6 +6,7 @@ BIN=./node_modules/.bin
 WEBPACK=$(BIN)/webpack
 NODEMON=$(BIN)/nodemon
 HOSTPORT=5000
+FN=
 
 run:
 	node index.js
@@ -22,7 +23,7 @@ test:
 	wrk -t4 -c10 -d10s -s bench/entry.lua http://localhost:5000
 
 deploy:
-	bash ./tools/deploy/gcp.sh
+	bash ./tools/deploy/gcp.sh $(FN)
 
 image:
 	docker build -t umegaya/gcfdev -f ./tools/docker/Dockerfile . 

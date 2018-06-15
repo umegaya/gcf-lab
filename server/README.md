@@ -41,12 +41,14 @@
   ```
   $ make shell
   # in docker container
-  > make deploy
+  > make deploy # deploy all
+  > make deploy FN=calc # only `calc` function
   ```
 
 - windows
   ```
   PowerShell>.\shell.bat
   # in docker container
-  > make deploy
+  > make deploy # deploy all
+  > make deploy FN=calc # only `calc` function
   ```
