@@ -4,6 +4,7 @@ CREDVOLUME=gcloud-config-for-gcfdev
 BIN=./node_modules/.bin
 WEBPACK=$(BIN)/webpack
 NODEMON=$(BIN)/nodemon
+HOSTPORT=5000
 
 run:
 	node index.js
@@ -30,4 +31,4 @@ init:
 	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set project $(PROJECT_ID)
 
 shell:
-	docker run --rm -ti --volumes-from $(CREDVOLUME) -v `pwd`:/project -w /project $(IMAGE) bash
+	docker run --rm -ti --volumes-from $(CREDVOLUME) -p 5000:$(HOSTPORT) -v `pwd`:/project -w /project $(IMAGE) bash
