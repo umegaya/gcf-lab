@@ -1,31 +1,52 @@
 ### caution
-- do not use docker-machine, its ignore file modify notification from host (eg. inotify).
-- if you add new directory for function, please restart make dev manually. 
+- if you add new directory for function (under ./functions), please restart make dev manually. 
 
 ### setup
 - osx
   ```
-  $ make init PROJECT_ID=$GCP_PROJECT_ID
-  # you will choose your google account to use gcp
+  $ cd $REPOSITORY_PATH/server
+  $ make init PROJECT_ID=$GCP_PROJECT_ID # you will be asked your google account to use gcp
   $ make shell
   # in docker container
   > yarn
-  > make dev 
+  > make compile
   ```
 - windows
-  - double-click tools/windows/init.bat
-  - double-click tools/windows/shell.bat
   ```
+  PowerShell>cd $REPOSITORY_PATH\server\tools\windows
+  PowerShell>.\init.bat $GCP_PROJECT_ID # you will be asked your google account to use gcp
+  PowerShell>.\shell.bat
   # in docker container
   > yarn
-  > make dev   
+  > make compile
   ```
 
 ### start development
 - osx
   ```
-  make dev
+  $ make shell
+  # in docker container
+  > make dev
   ```
 
 - windows
-  - double-click tools/windows/shell.bat
+  ```
+  PowerShell>.\shell.bat
+  # in docker container
+  > make dev
+  ```
+
+### deployment to google cloud functions
+- osx
+  ```
+  $ make shell
+  # in docker container
+  > make deploy
+  ```
+
+- windows
+  ```
+  PowerShell>.\shell.bat
+  # in docker container
+  > make deploy
+  ```
