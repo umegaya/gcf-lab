@@ -11,8 +11,9 @@ run:
 	node index.js
 
 dev:
-	$(WEBPACK) --config ./tools/webpack/config.js --watch &
-	$(NODEMON) --ext js --watch dist -x 'node index.js'
+	$(WEBPACK) --config ./tools/webpack/config.js --watch --watch-poll 1 &
+	sleep 1
+	$(NODEMON) -L --ext js --watch dist -x 'node index.js'
 
 compile:
 	$(WEBPACK) --config ./tools/webpack/config.js
