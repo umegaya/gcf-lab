@@ -5,6 +5,7 @@
         "allowJs": true
     },
     "include": [
-        "./node_modules/@types/**/*.d.ts"
+        "./node_modules/@types/**/*.d.ts",
+        "./node_modules/*/index.d.ts"
     ],
 }

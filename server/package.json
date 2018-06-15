@@ -1,5 +1,7 @@
 {
-  "dependencies": {},
+  "dependencies": {
+    "js-sha3": "^0.7.0"
+  },
   "devDependencies": {
     "@types/express": "^4.11.1",
     "@types/mysql": "^2.15.4",
