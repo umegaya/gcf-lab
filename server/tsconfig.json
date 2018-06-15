@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "lib": ["es6"],
+        "allowJs": true
+    },
+    "include": [
+        "./node_modules/@types/**/*.d.ts"
+    ],
+}
