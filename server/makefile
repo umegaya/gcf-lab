@@ -1,4 +1,5 @@
 PROJECT_ID=
+REGION=us-central1
 IMAGE=umegaya/gcfdev
 CREDVOLUME=gcloud-config-for-gcfdev
 BIN=./node_modules/.bin
@@ -27,8 +28,10 @@ image:
 
 init:
 	@echo "please provide your google cloud sdk credential..."
+	@-docker rm $(CREDVOLUME) 
 	docker run -ti --name $(CREDVOLUME) $(IMAGE) gcloud auth login
 	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set project $(PROJECT_ID)
+	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set functions/region $(REGION)
 
 shell:
 	docker run --rm -ti --volumes-from $(CREDVOLUME) -p 5000:$(HOSTPORT) -v `pwd`:/project -w /project $(IMAGE) bash

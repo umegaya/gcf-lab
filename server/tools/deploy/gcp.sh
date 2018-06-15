@@ -5,7 +5,7 @@ ROOT=$(cd $(dirname $0) && pwd)/../..
 FNROOT=${ROOT}/dist
 
 gcp() {
-	echo "gcloud $@"
+	gcloud $@
 } 
 
 deploy() {
