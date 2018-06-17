@@ -25,8 +25,11 @@ test:
 deploy:
 	bash ./tools/deploy/gcp.sh $(FN)
 
+migrate:
+
+
 image:
-	docker build -t umegaya/gcfdev -f ./tools/docker/Dockerfile . 
+	docker build -t umegaya/gcfdev ./tools/docker
 
 init:
 	@echo "please provide your google cloud sdk credential..."
