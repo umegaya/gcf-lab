@@ -68,6 +68,8 @@ checkpoint: tools
 
 revert: tools
 	node ./tools/deploy/migration.js revert
+	cd ./tools/deploy/migrations/ && rm `ls -r | head -1`
+	cd ./database/migrations/ && rm `ls -r | head -1`
 
 migrate:
 	$(WEBPACK) --config ./tools/webpack/migrations.js
