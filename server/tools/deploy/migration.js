@@ -157,7 +157,7 @@ function GetDB() {
     }
     var dbconfig = config_1.Config.db;
     //enumerate all entity to be used
-    dbconfig.entity = [User_1.User];
+    dbconfig.entities = [User_1.User];
     return typeorm_1.createConnection(config_1.Config.db).then((c) => {
         return database = c;
     });
@@ -186,21 +186,85 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = __webpack_require__(/*! ./Database */ "./database/Database.ts");
-function migrate() {
+const MysqlDriver_1 = __webpack_require__(/*! typeorm/driver/mysql/MysqlDriver */ "typeorm/driver/mysql/MysqlDriver");
+const CommandUtils_1 = __webpack_require__(/*! typeorm/commands/CommandUtils */ "typeorm/commands/CommandUtils");
+const StringUtils_1 = __webpack_require__(/*! typeorm/util/StringUtils */ "typeorm/util/StringUtils");
+//helper
+/**
+ * Gets contents of the migration file.
+ */
+function getTemplate(name, timestamp, upSqls, downSqls) {
+    return `import {MigrationInterface, QueryRunner} from "typeorm";
+export class ${StringUtils_1.camelCase(name, true)}${timestamp} implements MigrationInterface {
+    public async up(queryRunner: QueryRunner): Promise<any> {
+${upSqls.join(`
+`)}
+    }
+    public async down(queryRunner: QueryRunner): Promise<any> {
+${downSqls.join(`
+`)}
+    }
+}
+`;
+}
+//main
+var subcmd = process.argv[2];
+function main(cmd) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log('cmd', cmd);
         console.log("connect to database...");
         var db = yield Database_1.GetDB();
-        console.log("running migration...");
-        yield db.runMigrations({
-            transaction: true,
-        });
+        if (cmd == "apply") {
+            console.log("running migration...");
+            yield db.runMigrations({
+                transaction: true,
+            });
+        }
+        else if (cmd == "revert") {
+            console.log("reverting migration...");
+            yield db.undoLastMigration({
+                transaction: true,
+            });
+        }
+        else if (cmd == "generate") {
+            var migname = process.argv[3];
+            console.log("generating migration...");
+            const timestamp = new Date().getTime();
+            const filename = timestamp + "-" + migname + ".ts";
+            const sqlInMemory = yield db.driver.createSchemaBuilder().log();
+            const upSqls = [], downSqls = [];
+            // mysql is exceptional here because it uses ` character in to escape names in queries, that's why for mysql
+            // we are using simple quoted string instead of template string syntax
+            if (db.driver instanceof MysqlDriver_1.MysqlDriver) {
+                sqlInMemory.upQueries.forEach(query => {
+                    upSqls.push("        await queryRunner.query(\"" + query.replace(new RegExp(`"`, "g"), `\\"`) + "\");");
+                });
+                sqlInMemory.downQueries.forEach(query => {
+                    downSqls.push("        await queryRunner.query(\"" + query.replace(new RegExp(`"`, "g"), `\\"`) + "\");");
+                });
+            }
+            else {
+                sqlInMemory.upQueries.forEach(query => {
+                    upSqls.push("        await queryRunner.query(`" + query.replace(new RegExp("`", "g"), "\\`") + "`);");
+                });
+                sqlInMemory.downQueries.forEach(query => {
+                    downSqls.push("        await queryRunner.query(`" + query.replace(new RegExp("`", "g"), "\\`") + "`);");
+                });
+            }
+            if (upSqls.length) {
+                const fileContent = getTemplate(migname, timestamp, upSqls, downSqls.reverse());
+                const path = process.cwd() + "/database/migrations/" + filename;
+                yield CommandUtils_1.CommandUtils.createFile(path, fileContent);
+            }
+        }
+        yield db.close();
     });
 }
-migrate().then(() => {
-    console.log("migration done");
+main(subcmd).then(() => {
+    console.log(`${subcmd} migration done`);
     process.exit(0);
 }).catch((e) => {
-    console.log("migration failure:", e);
+    console.log(`${subcmd} migration failure:`, e);
     process.exit(1);
 });
 
@@ -237,6 +301,10 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
+__decorate([
+    typeorm_1.Column(),
+    __metadata("design:type", Number)
+], User.prototype, "age", void 0);
 User = __decorate([
     typeorm_1.Entity()
 ], User);
@@ -264,6 +332,39 @@ module.exports = require("reflect-metadata");
 /***/ (function(module, exports) {
 
 module.exports = require("typeorm");
+
+/***/ }),
+
+/***/ "typeorm/commands/CommandUtils":
+/*!************************************************!*\
+  !*** external "typeorm/commands/CommandUtils" ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("typeorm/commands/CommandUtils");
+
+/***/ }),
+
+/***/ "typeorm/driver/mysql/MysqlDriver":
+/*!***************************************************!*\
+  !*** external "typeorm/driver/mysql/MysqlDriver" ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("typeorm/driver/mysql/MysqlDriver");
+
+/***/ }),
+
+/***/ "typeorm/util/StringUtils":
+/*!*******************************************!*\
+  !*** external "typeorm/util/StringUtils" ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("typeorm/util/StringUtils");
 
 /***/ })
 

@@ -11,10 +11,22 @@ DBNAME=gcf-sqldb
 NAME=
 FN=
 
-db:
-	(docker inspect $(DBNAME) 2>&1 > /dev/null || docker run --name $(DBNAME) -p 3306:3306 -e MYSQL_ROOT_PASSWORD=admin -d mysql:5.7) && \
-		docker run --rm -ti --link $(DBNAME):dbhost mysql:5.7 mysql -h dbhost -padmin -e "create database if not exists db"
+#---------------
+# bootstrap(linux/osx)
+#---------------
+init:
+	@echo "please provide your google cloud sdk credential..."
+	@-docker rm $(CREDVOLUME) 
+	docker run -ti --name $(CREDVOLUME) $(IMAGE) gcloud auth login
+	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set project $(PROJECT_ID)
+	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set functions/region $(REGION)
 
+shell: db
+	docker run --rm -ti --volumes-from $(CREDVOLUME) --link $(DBNAME):dbhost -p 5000:$(HOSTPORT) -v `pwd`:/project -w /project $(IMAGE) bash
+
+#---------------
+# build code 
+#---------------
 dev: migrate
 	$(WEBPACK) --config ./tools/webpack/config.js --watch --watch-poll 1 &
 	sleep 1
@@ -27,28 +39,47 @@ compile:
 tools:
 	$(WEBPACK) --config ./tools/webpack/tools.js
 
-test:
-	wrk -t4 -c10 -d10s -s bench/entry.lua http://localhost:5000
+#---------------
+# database 
+#---------------
+db:
+	(docker inspect $(DBNAME) 2>&1 > /dev/null || docker run --name $(DBNAME) -p 3306:3306 -e MYSQL_ROOT_PASSWORD=admin -d mysql:5.7) && \
+		docker run --rm -ti --link $(DBNAME):dbhost -v `pwd`:/project -e MYSQL_ROOT_PASSWORD=admin mysql:5.7 bash /project/tools/deploy/dbinit.sh dbhost db
 
-deploy:
-	bash ./tools/deploy/gcp.sh $(FN)
+dropdb:
+	@-docker kill $(DBNAME)
+	@-docker rm $(DBNAME)
 
-migent:
-	$(TYPEORM) migration:create -n $(NAME) -d ./database/migrations/
+dbsh:
+	docker exec -ti $(DBNAME) bash
+
+#---------------
+# migration 
+#---------------
+checkpoint: tools
+	node ./tools/deploy/migration.js generate $(NAME)
+
+revert: 
+	node ./tools/deploy/migration.js revert
 
 migrate:
 	$(WEBPACK) --config ./tools/webpack/migrations.js
-	node ./tools/deploy/migration.js
+	node ./tools/deploy/migration.js apply
 
+#---------------
+# test 
+#---------------
+test:
+	wrk -t4 -c10 -d10s -s bench/entry.lua http://localhost:5000
+
+#---------------
+# deployment
+#---------------
+deploy:
+	bash ./tools/deploy/gcp.sh $(FN)
+
+#---------------
+# make develop env
+#---------------
 image:
 	docker build -t umegaya/gcfdev ./tools/docker
-
-init:
-	@echo "please provide your google cloud sdk credential..."
-	@-docker rm $(CREDVOLUME) 
-	docker run -ti --name $(CREDVOLUME) $(IMAGE) gcloud auth login
-	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set project $(PROJECT_ID)
-	docker run -ti --volumes-from $(CREDVOLUME) $(IMAGE) gcloud config set functions/region $(REGION)
-
-shell: db
-	docker run --rm -ti --volumes-from $(CREDVOLUME) --link $(DBNAME):dbhost -p 5000:$(HOSTPORT) -v `pwd`:/project -w /project $(IMAGE) bash
