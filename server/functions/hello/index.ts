@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Config } from '../../common/config';
 import { sleep } from '../../common/util';
 
 export var hello = async (req: Request, res: Response) => {

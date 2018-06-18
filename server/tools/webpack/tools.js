@@ -1,16 +1,5 @@
 const path = require('path');
-const glob = require('glob');
 const nodeExternals = require('webpack-node-externals');
-
-const getEntries = () => {
-  var paths = glob.sync("./functions/*/index.ts");
-  var ret = {}
-  paths.map((path) => {
-    var m = path.match(/^\.\/functions\/([^\/]+)/);
-    ret[m[1]] = path;
-  });
-  return ret;
-};
 
 module.exports = {
   mode: process.env.CONFIG_NAME == "prod" ? 'production' : 'development',
@@ -24,12 +13,14 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js"],
   },
   externals: [nodeExternals()],
-  entry: getEntries(),
+  entry: {
+    "Migration.ts": "./database/Migration.ts"
+  },
   devtool: false,
   target: 'node',
   output: {
-    filename: '[name]/index.js',
-    path: path.resolve(path.join(__dirname, '..', '..', 'dist')),
+    filename: 'migration.js',
+    path: path.resolve(path.join(__dirname, '..', 'deploy')),
     libraryTarget: 'commonjs',
   },
 };

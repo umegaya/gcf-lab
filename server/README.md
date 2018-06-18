@@ -26,6 +26,7 @@
   ```
   $ make shell
   # in docker container
+  > yarn
   > make dev
   ```
 
@@ -33,6 +34,7 @@
   ```
   PowerShell>.\shell.bat
   # in docker container
+  > yarn
   > make dev
   ```
 
@@ -52,3 +54,26 @@
   > make deploy # deploy all
   > make deploy FN=calc # only `calc` function
   ```
+
+### create/change database schema (migrations)
+- first, add or modify file at ```./database/entities/*.ts```
+- second, create ```checkpoint``` with name. it will create new migration code automatically by diffing code in ```./database/entities/*.ts``` and actual database schema.
+- then apply new migration codes by using ```make migrate```
+- you should commit created typescritp and compiled javascript to source control.
+- osx
+  ```
+  $ make shell
+  # in docker container
+  > make checkpoint NAME=AddNewColumn # create checkpoint
+  > make migrate # migrate database to above new checkpoint.
+  ```
+
+- windows
+  ```
+  PowerShell>.\shell.bat
+  # in docker container
+  > make checkpoint NAME=AddNewColumn # create checkpoint
+  > make migrate # migrate database to above new checkpoint.
+  ```
+
+

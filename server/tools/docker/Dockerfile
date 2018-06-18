@@ -18,3 +18,5 @@ RUN ln -s /google-cloud-sdk /usr/lib
 
 ENV PATH /google-cloud-sdk/bin:/bin:$PATH
 VOLUME ["/.config"]
+
+RUN yarn global add typeorm

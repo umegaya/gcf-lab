@@ -3,6 +3,16 @@ var config_set = {
     dev: function () {
         return {
             db: {
+                type: "mysql",
+                host: "dbhost",
+                port: 3306,
+                username: "root",
+                password: "admin",
+                database: "db",
+                migrationsRun: true,
+                migrations: ["/project/tools/deploy/migrations/*.js"],
+                synchronize: false,
+                logging: true
             }
         }
     },

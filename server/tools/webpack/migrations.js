@@ -3,10 +3,10 @@ const glob = require('glob');
 const nodeExternals = require('webpack-node-externals');
 
 const getEntries = () => {
-  var paths = glob.sync("./functions/*/index.ts");
+  var paths = glob.sync("./database/migrations/*.ts");
   var ret = {}
   paths.map((path) => {
-    var m = path.match(/^\.\/functions\/([^\/]+)/);
+    var m = path.match(/^\.\/database\/migrations\/([^\/]+)/);
     ret[m[1]] = path;
   });
   return ret;
@@ -28,8 +28,8 @@ module.exports = {
   devtool: false,
   target: 'node',
   output: {
-    filename: '[name]/index.js',
-    path: path.resolve(path.join(__dirname, '..', '..', 'dist')),
+    filename: '[name].js',
+    path: path.resolve(path.join(__dirname, '..', 'deploy', 'migrations')),
     libraryTarget: 'commonjs',
   },
 };
