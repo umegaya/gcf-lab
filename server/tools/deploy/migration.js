@@ -142,7 +142,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __webpack_require__(/*! reflect-metadata */ "reflect-metadata");
 const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
 const config_1 = __webpack_require__(/*! ../common/config */ "./common/config.ts");
-const User_1 = __webpack_require__(/*! ./entity/User */ "./database/entity/User.ts");
+const User_1 = __webpack_require__(/*! ./entities/User */ "./database/entities/User.ts");
 class Database extends typeorm_1.Connection {
     initialize() {
     }
@@ -271,10 +271,10 @@ main(subcmd).then(() => {
 
 /***/ }),
 
-/***/ "./database/entity/User.ts":
-/*!*********************************!*\
-  !*** ./database/entity/User.ts ***!
-  \*********************************/
+/***/ "./database/entities/User.ts":
+/*!***********************************!*\
+  !*** ./database/entities/User.ts ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

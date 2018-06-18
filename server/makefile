@@ -35,9 +35,16 @@ dev: migrate
 compile:
 	$(WEBPACK) --config ./tools/webpack/config.js
 
-.PHONY: tools
-tools:
+#---------------
+# build tools 
+#---------------
+MIGRATOR=./tools/deploy/migration.js
+ENTITIES=$(shell ls ./database/entities/*.ts)
+$(MIGRATOR): ./database/Migration.ts $(ENTITIES)
 	$(WEBPACK) --config ./tools/webpack/tools.js
+
+.PHONY: tools
+tools: $(MIGRATOR)
 
 #---------------
 # database 
@@ -59,7 +66,7 @@ dbsh:
 checkpoint: tools
 	node ./tools/deploy/migration.js generate $(NAME)
 
-revert: 
+revert: tools
 	node ./tools/deploy/migration.js revert
 
 migrate:

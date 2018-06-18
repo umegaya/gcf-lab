@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import {createConnection, Connection} from "typeorm";
 import {Config} from "../common/config";
-import {User} from "./entity/User";
+import {User} from "./entities/User";
 
 export class Database extends Connection {
     initialize(): void {

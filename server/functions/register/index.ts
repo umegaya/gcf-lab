@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { GetDB, Database } from '../../database/Database';
-import {User} from "../../database/entity/User";
+import {User} from "../../database/entities/User";
 
 
 export var register = async (req: Request, res: Response) => {
