@@ -27,7 +27,7 @@ shell: db
 #---------------
 # build code 
 #---------------
-dev: migrate
+dev:
 	$(WEBPACK) --config ./tools/webpack/config.js --watch --watch-poll 1 &
 	sleep 1
 	$(NODEMON) -L --ext js --watch dist -x 'node index.js'
@@ -58,7 +58,7 @@ dropdb:
 	@-docker rm $(DBNAME)
 
 dbsh:
-	docker exec -ti $(DBNAME) bash
+	docker exec -ti $(DBNAME) mysql -u root -padmin db
 
 #---------------
 # migration 

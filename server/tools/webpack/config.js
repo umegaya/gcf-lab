@@ -13,7 +13,7 @@ const getEntries = () => {
 };
 
 module.exports = {
-  mode: process.env.CONFIG_NAME == "dev" ? 'development' : 'production',
+  mode: process.env.CONFIG_NAME == "prod" ? 'production' : 'development',
   module: {
     rules: [
         { test: /\.ts$/, use: 'ts-loader' },

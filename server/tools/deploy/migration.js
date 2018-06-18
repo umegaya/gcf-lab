@@ -107,6 +107,7 @@ var config_set = {
                 username: "root",
                 password: "admin",
                 database: "db",
+                migrationsRun: true,
                 migrations: ["/project/tools/deploy/migrations/*.js"],
                 synchronize: false,
                 logging: true
@@ -158,7 +159,7 @@ function GetDB() {
     var dbconfig = config_1.Config.db;
     //enumerate all entity to be used
     dbconfig.entities = [User_1.User];
-    return typeorm_1.createConnection(config_1.Config.db).then((c) => {
+    return typeorm_1.createConnection(dbconfig).then((c) => {
         return database = c;
     });
 }
@@ -291,6 +292,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = __webpack_require__(/*! typeorm */ "typeorm");
+//must specify entity name to work with minify correctly.
 let User = class User {
 };
 __decorate([
@@ -301,12 +303,8 @@ __decorate([
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "name", void 0);
-__decorate([
-    typeorm_1.Column(),
-    __metadata("design:type", Number)
-], User.prototype, "age", void 0);
 User = __decorate([
-    typeorm_1.Entity()
+    typeorm_1.Entity('User')
 ], User);
 exports.User = User;
 

@@ -1,6 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
 
-@Entity()
+//must specify entity name to work with minify correctly.
+@Entity('User')
 export class User {
 
     @PrimaryGeneratedColumn()

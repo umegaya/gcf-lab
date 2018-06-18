@@ -9,6 +9,7 @@ var config_set = {
                 username: "root",
                 password: "admin",
                 database: "db",
+                migrationsRun: true,
                 migrations: ["/project/tools/deploy/migrations/*.js"],
                 synchronize: false,
                 logging: true

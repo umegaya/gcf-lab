@@ -26,6 +26,7 @@
   ```
   $ make shell
   # in docker container
+  > yarn
   > make dev
   ```
 
@@ -33,8 +34,13 @@
   ```
   PowerShell>.\shell.bat
   # in docker container
+  > yarn
   > make dev
   ```
+
+### create/change database schema (migrations)
+
+
 
 ### deployment to google cloud functions
 - osx

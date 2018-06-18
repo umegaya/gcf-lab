@@ -19,7 +19,7 @@ export function GetDB(): Promise<Database> {
     var dbconfig = Config.db;
     //enumerate all entity to be used
     dbconfig.entities = [ User ];
-    return createConnection(Config.db).then((c: Connection) => {
+    return createConnection(dbconfig).then((c: Connection) => {
         return database = c as Database;
     });
 }
