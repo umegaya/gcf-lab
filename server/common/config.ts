@@ -4,12 +4,13 @@ var config_set = {
         return {
             db: {
                 type: "mysql",
-                host: "localhost",
+                host: "dbhost",
                 port: 3306,
                 username: "root",
                 password: "admin",
                 database: "db",
-                synchronize: true,
+                migrations: ["/project/tools/deploy/migrations/*.js"],
+                synchronize: false,
                 logging: true
             }
         }
