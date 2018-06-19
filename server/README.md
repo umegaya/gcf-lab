@@ -1,7 +1,23 @@
 ### caution
 - if you add new directory for function (under ./functions), please restart make dev manually. 
 
+### prepare
+- common
+  - add "cloud functions developer" privilege to your account
+  
+- osx
+  - osx high sierra recommended
+  - install git
+  - install [docker for mac](https://www.docker.com/docker-mac)
+  
+- win
+  - windows 10 Pro (latest) recommended
+  - install git
+  - install [docker for win](https://www.docker.com/docker-win)
+  - install [window subsystem for linux and ubuntu](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (for testing with curl)
+
 ### setup
+- clone this repository
 - osx
   ```
   $ cd $REPOSITORY_PATH/server
