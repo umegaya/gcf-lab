@@ -61,15 +61,15 @@
   - use Ubuntu on windows subsystem for linux
 ```
   # calc: calculate sha3 hash for the text given by the value for key "data" of posted data
-  shell>curl https://localhost:5000/functions/calc -H 'Content-Type: application/json' -d '{"data":"hoge"}'
+  shell>curl http://localhost:5000/functions/calc -H 'Content-Type: application/json' -d '{"data":"hoge"}'
  c78a779a8cd7e0a0e280d567c59782101be0fbd3c48a118574fb545a64e3bbb1ef503d53c41474bd8ebba1c158013055892411b43414c4e649d925125358ba24
  
   # hello: respond text with delay specified by the value for key "wait_msec" of posted data
-  shell>curl https://localhost:5000/functions/hello -H 'Content-Type: application/json' -d '{"wait_msec":100}'
+  shell>curl http://localhost:5000/functions/hello -H 'Content-Type: application/json' -d '{"wait_msec":100}'
   delayed hello: 100 ms # should have additional latency 100ms
   
   # register: create record which `name` column is the value for key "name" of posted data
-  shell>curl https://localhost:5000/functions/register -H 'Content-Type: application/json' -d '{"name":"hoge"}'
+  shell>curl http://localhost:5000/functions/register -H 'Content-Type: application/json' -d '{"name":"hoge"}'
   {"id":1} # insert(1, "hoge")  
 ```
 
